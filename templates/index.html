@@ -1,1 +1,88 @@
-website
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+    <meta charset="UTF-8">
+    <title>DIY PasteBin</title>
+    <style>
+        body {
+            background-color: rgb(0, 0, 0);
+            font-family: sans-serif;
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+        textarea {
+            width: 100%;
+            height: 400px;
+            font-family: monospace;
+            white-space: pre;
+            resize: vertical;
+        }
+        input[type="text"] {
+            width: 100%;
+            font-size: 1rem;
+            padding: 5px;
+            margin-bottom: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 1rem;
+            margin: 5px 5px 15px 0;
+            cursor: pointer;
+        }
+        .file-list {
+            margin-top: 30px;
+        }
+
+        h1, h2, h3, p {
+            color: blue;
+        }
+        label {
+            color: gray;
+        }
+        hr {
+            width: 100%;
+            height: 10px;
+            color: antiquewhite;
+            background-color: rgb(55, 136, 168);
+            border-radius: ;
+            border-color: green;
+        }
+    </style>
+</head>
+<body>
+    <h1 style="text-align: center;">Nový pejst text</h1>
+    <hr>
+    <form method="POST">
+        <label style="color: rgb(0, 255, 0); text-align: center;" for="filename">Zadajte názov súboru a potom vložte text nižšie</label>
+        <input type="text" id="filename" name="filename" placeholder="napr. kod.txt" value="{{ filename }}"><br>
+
+        <textarea name="paste" placeholder="Sem vložte text...">{{ paste | e }}</textarea><br>
+        
+        <div style="text-align: center;">
+            <button type="submit">Uložiť</button>
+            <button type="button" onclick="copyToClipboard()">Kopirovať <span>📋</span></button>
+        </div>
+    </form>
+
+    <div class="file-list">
+        <h3>Existujúce súbory:</h3>
+        {% for file in files %}
+            <form method="GET" style="display:inline;">
+                <input type="hidden" name="file" value="{{ file }}">
+                <button type="submit">{{ file }}</button>
+            </form>
+        {% else %}
+            <p>Žiadne súbory zatiaľ neexistujú.</p>
+        {% endfor %}
+    </div>
+
+    <script>
+        function copyToClipboard() {
+            const textarea = document.querySelector('textarea');
+            textarea.select();
+            document.execCommand('copy');
+        }
+    </script>
+</body>
+</html>
