@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>DiyPasteBin + Upload</title>
+    <style>
+        body {
+            font-family: Consolas, monospace;
+            background-color: #f4f4f8;
+            margin: 40px auto;
+            max-width: 800px;
+            padding: 0 20px;
+            color: #222;
+        }
+
+        h1, h2 {
+            color: #1a1a1a;
+            border-left: 6px solid crimson;
+            padding-left: 10px;
+        }
+
+        .box {
+            background-color: #ffffff;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        textarea {
+            width: 100%;
+            height: 200px;
+            font-family: monospace;
+            font-size: 14px;
+            padding: 10px;
+            border: 1px solid #aaa;
+            border-radius: 6px;
+            background-color: #fafafa;
+            resize: vertical;
+        }
+
+        input[type="text"], input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            margin-top: 6px;
+            margin-bottom: 12px;
+            border: 1px solid #aaa;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        input[type="submit"] {
+            background-color: crimson;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        input[type="submit"]:hover {
+            background-color: darkred;
+        }
+
+        ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        ul li {
+            padding: 6px 0;
+            border-bottom: 1px dashed #ccc;
+        }
+
+        ul li a {
+            color: #0077cc;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        ul li a:hover {
+            text-decoration: underline;
+            color: #005099;
+        }
+
+        p {
+            margin-top: 8px;
+        }
+
+        hr.hr-red {
+            border: none;
+            height: 3px;
+            background-color: crimson;
+            margin: 40px 0;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+            textarea {
+                height: 150px;
+            }
+        }
+
+    </style>
+</head>
+<body>
+
+    <h1>DiyPasteBin</h1>
+    <div class="box">
+        {% if chyba %}
+            <p style="color: red;"><strong>{{ chyba }}</strong></p>
+        {% endif %}
+        <form method="POST" action="{{ url_for('save_file') }}">
+            <label for="nazov">Názov súboru:</label><br>
+            <input type="text" name="nazov" id="nazov" value="{{ nazov or '' }}" required><br>
+
+            <label for="obsah">Obsah:</label><br>
+            <textarea name="obsah" id="obsah">{{ obsah | e }}</textarea><br><br>
+
+            <input type="submit" value="Uložiť">
+        </form>
+    </div>
+
+    <h2>Uložené súbory:</h2>
+    <div class="box">
+        {% if files %}
+            <ul>
+                {% for f in files %}
+                    <li><a href="{{ url_for('open_file', filename=f) }}">{{ f }}</a></li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>Žiadne uložené textové súbory.</p>
+        {% endif %}
+    </div>
+
+    <hr class="hr-red">
+
+    <h2>Upload súborov:</h2>
+    <div class="box">
+        <form method="POST" action="{{ url_for('upload_file') }}" enctype="multipart/form-data">
+            <label for="file">Vyber súbor na upload:</label><br>
+            <input type="file" name="file" id="file" required><br>
+            <input type="submit" value="Nahrať súbor">
+        </form>
+    </div>
+
+    <h2>Nahrané súbory:</h2>
+    <div class="box">
+        {% if upload_files %}
+            <ul>
+                {% for file in upload_files %}
+                    <li><a href="{{ url_for('download_file', filename=file) }}">{{ file }}</a></li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>Žiadne nahrané súbory.</p>
+        {% endif %}
+    </div>
+
+</body>
+</html>
