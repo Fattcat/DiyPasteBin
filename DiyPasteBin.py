@@ -40,4 +40,4 @@ def secure_filename(name):
     return "".join(c for c in name if c.isalnum() or c in (' ', '.', '_', '-')).strip()
 
 if __name__ == "__main__":
-#    app.run(host="0.0.0.0", port=5000, debug=True)
+    app.run(host="0.0.0.0", port=5000, debug=True)
