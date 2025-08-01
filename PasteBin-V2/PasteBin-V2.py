@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, send_from_directory
 import os
 
+os.chdir(os.path.dirname(os.path.abspath(__file__)))  # Zabezpečí správne relatívne cesty
 app = Flask(__name__)
 
 PASTE_FOLDER = 'ulozene_subory'
@@ -57,4 +58,4 @@ def download_file(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename, as_attachment=True)
 
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", debug=True)
+    app.run(host="192.168.x.xxx",port=5001, debug=True)
