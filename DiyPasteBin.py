@@ -6,7 +6,7 @@ app = Flask(__name__)
 app.secret_key = 'tajny_kluc_sem_daj_silny'  # Zmeň si to na silný tajný kľúč
 
 USERNAME = 'admin'
-PASSWORD = 'dONKo'  # môžeš si neskôr spraviť hashovanie
+PASSWORD = 'paSS-Word'  # Your Pass here
 
 PASTE_FOLDER = 'ulozene_subory'
 UPLOAD_FOLDER = 'uploady'
