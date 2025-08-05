@@ -1,88 +1,241 @@
 <!DOCTYPE html>
-<html lang="sk">
+<html>
 <head>
     <meta charset="UTF-8">
-    <title>DIY PasteBin</title>
+    <title style="color: green;">DiyPasteBin</title>
     <style>
+
         body {
-            background-color: rgb(0, 0, 0);
-            font-family: sans-serif;
-            max-width: 800px;
+            font-family: Consolas, monospace;
+            background-color: #28282c;
             margin: 40px auto;
-            padding: 20px;
-        }
-        textarea {
-            width: 100%;
-            height: 400px;
-            font-family: monospace;
-            white-space: pre;
-            resize: vertical;
-        }
-        input[type="text"] {
-            width: 100%;
-            font-size: 1rem;
-            padding: 5px;
-            margin-bottom: 10px;
-        }
-        button {
-            padding: 10px 20px;
-            font-size: 1rem;
-            margin: 5px 5px 15px 0;
-            cursor: pointer;
-        }
-        .file-list {
-            margin-top: 30px;
+            max-width: 800px;
+            padding: 0 20px;
+            color: #222;
         }
 
-        h1, h2, h3, p {
-            color: blue;
+        h1, h2 {
+            color: #62e441;
+            border-left: 6px solid crimson;
+            border-width: 20px;
+            border-radius: 10px 10px;
+            padding-left: 10px;
         }
-        label {
-            color: gray;
+
+        .box {
+            text-align: centerr;
+            min-width: 600px;
+            background-color: #ffffff;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+
+            flex: 1 1 calc(33.33% - 10px);
+            resize: both;
+            box-sizing: border-box;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
         }
-        hr {
+
+        textarea {
+            white-space: pre;  /* TOTO JE PRE PRIDNIE ScrollBarov Horizontal a Vertical (pre velka text) */
+            min-width: 730px; max-width: 730px; /* pre NEpohybovanie Textoveho políčka*/
+            min-height: 400px; max-height: 1000px;
+            flex: 1 1 calc(33.33% - 10px);
             width: 100%;
-            height: 10px;
-            color: antiquewhite;
-            background-color: rgb(55, 136, 168);
-            border-radius: ;
-            border-color: green;
+            height: 200px;
+            font-family: monospace;
+            font-size: 14px;
+            padding: 10px;
+            border: 2px solid #aaa;
+            border-radius: 6px;
+            background-color: #fafafa;
+            resize: both;
+        }
+
+        .NazovSuboru {
+            text-align: left;
+        }
+
+        input[type="text"], input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            margin-top: 6px;
+            margin-bottom: 12px;
+            border: 1px solid #aaa;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        input[type="submit"] {
+            background-color: crimson;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .tlacidloKopirovat {
+            background-color: crimson;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        input[type="submit"]:hover {
+            background-color: darkred;
+        }
+
+        ul {
+            list-style:square;
+            padding-left: 0;
+        }
+
+        ul li {
+            padding: 6px 0;
+            border-bottom: 1px dashed #b94343;
+        }
+
+        ul li a {
+            color: #0077cc;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        ul li a:hover {
+            text-decoration: underline;
+            color: #005099;
+        }
+
+        p {
+            text-align: center;
+            margin-top: 8px;
+        }
+
+        hr.hr-red {
+            border: none;
+            height: 3px;
+            background-color: crimson;
+            margin: 40px 0;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+            textarea {
+                height: 150px;
+            }
+        }
+        h3 {
+            color: #32d3f0be;
+            border-left: 60px solid rgba(59, 247, 1, 0.644);
+            border-right: 6px solid rgba(59, 247, 1, 0.644);
+            border-width: 200px;
+            border-radius: 10px 10px;
+            padding-left: 10px;
+        }
+
+        .file-item {
+            flex: 1 1 calc(1% + 20px);
+            box-sizing: border-box;
+            text-decoration: none;
+            color: #005099;
+
+            list-style: none;
         }
     </style>
 </head>
 <body>
-    <h1 style="text-align: center;">Nový pejst text</h1>
-    <hr>
-    <form method="POST">
-        <label style="color: rgb(0, 255, 0); text-align: center;" for="filename">Zadajte názov súboru a potom vložte text nižšie</label>
-        <input type="text" id="filename" name="filename" placeholder="napr. kod.txt" value="{{ filename }}"><br>
 
-        <textarea name="paste" placeholder="Sem vložte text...">{{ paste | e }}</textarea><br>
-        
-        <div style="text-align: center;">
-            <button type="submit">Uložiť</button>
-            <button type="button" onclick="copyToClipboard()">Kopirovať <span>📋</span></button>
-        </div>
-    </form>
+    <h1>DiyPasteBin</h1>
+    <center><p><a href="{{ url_for('logout') }}" style="font-size:20px;">Odhlásiť sa</a></p></center>
+    <div class="box">
+        {% if chyba %}
+            <p style="color: red;"><strong>{{ chyba }}</strong></p>
+        {% endif %}
+        <form class="NazovSuboru" method="POST" action="{{ url_for('save_file') }}">
+            <label for="nazov">Názov súboru:</label><br>
+            <input type="text" name="nazov" id="nazov" value="{{ nazov or '' }}" required><br>
 
-    <div class="file-list">
-        <h3>Existujúce súbory:</h3>
-        {% for file in files %}
-            <form method="GET" style="display:inline;">
-                <input type="hidden" name="file" value="{{ file }}">
-                <button type="submit">{{ file }}</button>
-            </form>
-        {% else %}
-            <p>Žiadne súbory zatiaľ neexistujú.</p>
-        {% endfor %}
+            <label for="obsah">Obsah:</label><br>
+            <textarea name="obsah" id="obsah">{{ obsah | e }}</textarea><br><br>
+            <button type="button" onclick="copyToClipboard()">Kopírovať <span>📋</span></button>
+            <input type="submit" value="Uložiť">
+        </form>
     </div>
 
+    <h2>Uložené súbory:</h2>
+    <div class="box">
+        {% if files %}
+        <div class="file-item"></div>
+            {% for f in files %}
+                <li><a href="{{ url_for('open_file', filename=f) }}">{{ f }}</a></li>
+            {% endfor %}
+        </div>
+        {% else %}
+            <p>Žiadne uložené textové súbory.</p>
+        {% endif %}
+    </div>
+
+    <hr class="hr-red">
+
+    <h2>Upload súborov:</h2>
+    <div class="box">
+        <form method="POST" action="{{ url_for('upload_file') }}" enctype="multipart/form-data">
+            <label for="file">Vyber súbor na upload:</label><br>
+            <input type="file" name="file" id="file" required><br>
+            <input type="submit" value="Nahrať súbor">
+        </form>
+    </div>
+
+    <h2>Nahrané súbory:</h2>
+
+    <div class="box">
+        {% if upload_files %}
+            <ul>
+                {% for file in upload_files %}
+                    <li><a href="{{ url_for('download_file', filename=file) }}">{{ file }}</a></li>
+                {% endfor %}
+            </ul>
+
+        {% else %}
+            <p>Žiadne nahrané súbory.</p>
+        {% endif %}
+    </div>
+
+
     <script>
+        let docTitle = document.title;
+
+        window.addEventListener("blur", () => {
+            document.title = "Come Back :(";
+        });
+
+        window.addEventListener("focus", () => {
+            document.title = docTitle;
+        });
+
+
         function copyToClipboard() {
             const textarea = document.querySelector('textarea');
             textarea.select();
             document.execCommand('copy');
         }
     </script>
+
+    <footer>
+        <hr>
+        <h3><center>Created by github.com/Fattcat</center></h3>
+    </footer>
+
 </body>
 </html>
